@@ -1,3 +1,4 @@
+// Importing required packages
 package main
 
 import (
@@ -43,6 +44,8 @@ func main() {
 
 	// Define a route for "/v1/healthz" and associate it with the "handlerReadiness" function
 	v1Router.Get("/healthz", handlerReadiness)
+	// Define a route for "/v1/err" and associate it with the "handlerError" function
+	v1Router.Get("/err", handlerError)
 
 	// Mount the v1Router under the "/v1" prefix in the main router
 	router.Mount("/v1", v1Router)

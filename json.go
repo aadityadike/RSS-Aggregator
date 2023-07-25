@@ -6,6 +6,19 @@ import (
 	"net/http"
 )
 
+func respondWithError(w http.ResponseWriter, code int, msg string) {
+	if code > 499 {
+		log.Println("Responding with 5XX error: ", msg)
+	}
+
+	type errResponse struct {
+		Error string `json:"error"`
+	}
+	respondWithJson(w, code, errResponse{
+		Error: msg,
+	})
+}
+
 // respondWithJson is a utility function to send JSON responses to clients over HTTP.
 // It takes a ResponseWriter, an HTTP status code, and a payload (data) to be converted to JSON.
 func respondWithJson(w http.ResponseWriter, code int, payload interface{}) {

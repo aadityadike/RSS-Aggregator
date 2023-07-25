@@ -10,3 +10,4 @@ func handlerReadiness(w http.ResponseWriter, r *http.Request) {
 	// The status code 200 indicates a successful response.
 	respondWithJson(w, 200, struct{}{})
 }
+
