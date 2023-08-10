@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (apicfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
+func (config *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Name string `json:"name"`
 	}
@@ -25,7 +25,7 @@ func (apicfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	user, err := apicfg.DB.CreateUser(r.Context(), database.CreateUserParams{
+	user, err := config.DB.CreateUser(r.Context(), database.CreateUserParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
