@@ -4,15 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
-
-	"github.com/aadityadike/RSS-Aggregator/internal/database"
-	"github.com/google/uuid"
 )
 
-func (config *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
+func (config *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
-		Name string `json:"name"`
+		ApiKey string `json:"apiKey"`
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -26,12 +22,7 @@ func (config *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	user, err := config.DB.CreateUser(r.Context(), database.CreateUserParams{
-		ID:        uuid.New(),
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
-		Name:      params.Name,
-	})
+	user, err := config.DB.GetUserByAPIKey(r.Context(), params.ApiKey)
 
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Error creating user %v", err))
