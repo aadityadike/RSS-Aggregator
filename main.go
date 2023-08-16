@@ -61,9 +61,11 @@ func main() {
 	router.Mount("/v1", v1Router)
 
 	v1Router.Get("/healthz", handlerReadiness)
-	v1Router.Get("/user", config.handlerGetUser)
+	v1Router.Get("/user", config.middlewareAuth(config.handlerGetUser))
+	v1Router.Post("/feed", config.middlewareAuth(config.handlerCreateFeed))
+	v1Router.Post("/user", config.handlerCreateUser)
 	v1Router.Get("/err", handlerError)
-	v1Router.Post("/users", config.handlerCreateUser)
+	v1Router.Get("/feed", config.handlerGetFeed)
 	v1Router.Delete("/delete", config.handlerDeleteUser)
 
 	srv := &http.Server{
