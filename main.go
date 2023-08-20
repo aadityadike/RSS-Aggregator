@@ -66,6 +66,7 @@ func main() {
 	v1Router.Post("/user", config.handlerCreateUser)
 	v1Router.Get("/err", handlerError)
 	v1Router.Get("/feed", config.handlerGetFeed)
+	v1Router.Post("/feedFollows", config.middlewareAuth(config.handlerFollowFeed))
 	v1Router.Delete("/delete", config.handlerDeleteUser)
 
 	srv := &http.Server{
