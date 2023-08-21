@@ -71,3 +71,21 @@ func databaseFeedsToFeeds(dbFeed []database.Feed) []Feed {
 	}
 	return feeds
 }
+
+func databaseFeedsFollowingToFeedsFollowing(dbFeedFollowing []database.FeedFollow) []FeedFollow {
+	feedFollows := []FeedFollow{}
+
+	for _, each := range dbFeedFollowing {
+		feedFollows = append(feedFollows, databaseFeedFollowsToFollows(each))
+	}
+	return feedFollows
+}
+
+func databaseUsersToUsers(dbGetUsers []database.User) []User {
+	allUsers := []User{}
+
+	for _, each := range dbGetUsers {
+		allUsers = append(allUsers, databaseUserToUser(each))
+	}
+	return allUsers
+}

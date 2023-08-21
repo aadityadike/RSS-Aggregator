@@ -60,13 +60,20 @@ func main() {
 	v1Router := chi.NewRouter()
 	router.Mount("/v1", v1Router)
 
+	/* GET REQUEST */
 	v1Router.Get("/healthz", handlerReadiness)
 	v1Router.Get("/user", config.middlewareAuth(config.handlerGetUser))
+	v1Router.Get("/users", config.handlerGetUsers)
+	v1Router.Get("/feed", config.handlerGetFeed)
+	v1Router.Get("/err", handlerError)
+	v1Router.Get("/feedFollows", config.middlewareAuth(config.handlerGetFeedFollowing))
+
+	/* POST REQUEST */
 	v1Router.Post("/feed", config.middlewareAuth(config.handlerCreateFeed))
 	v1Router.Post("/user", config.handlerCreateUser)
-	v1Router.Get("/err", handlerError)
-	v1Router.Get("/feed", config.handlerGetFeed)
 	v1Router.Post("/feedFollows", config.middlewareAuth(config.handlerFollowFeed))
+
+	/* DELETE REQUEST */
 	v1Router.Delete("/delete", config.handlerDeleteUser)
 
 	srv := &http.Server{

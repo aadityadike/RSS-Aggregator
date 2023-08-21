@@ -16,6 +16,7 @@ func (config *apiConfig) handlerFollowFeed(w http.ResponseWriter, r *http.Reques
 	}
 
 	decoder := json.NewDecoder(r.Body)
+	fmt.Print(r.Body)
 
 	params := parameters{}
 

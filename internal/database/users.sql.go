@@ -49,8 +49,44 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
+const getAllTheUserData = `-- name: GetAllTheUserData :many
+SELECT id, created_at, updated_at, name, api_key
+FROM users
+`
+
+func (q *Queries) GetAllTheUserData(ctx context.Context) ([]User, error) {
+	rows, err := q.db.QueryContext(ctx, getAllTheUserData)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []User
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Name,
+			&i.ApiKey,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getUserByAPIKey = `-- name: GetUserByAPIKey :one
-SELECT id, created_at, updated_at, name, api_key FROM users WHERE api_key = $1
+SELECT id, created_at, updated_at, name, api_key
+FROM users
+WHERE api_key = $1
 `
 
 func (q *Queries) GetUserByAPIKey(ctx context.Context, apiKey string) (User, error) {
