@@ -3,6 +3,7 @@ package main
 import (
 	// standard libraries
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -22,6 +23,14 @@ type apiConfig struct {
 
 func main() {
 	godotenv.Load()
+
+	feeds, err := getAllFeeds("https://adityadike.hashnode.dev/rss.xml")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(feeds)
 
 	portString := os.Getenv("PORT")
 
@@ -74,6 +83,7 @@ func main() {
 	v1Router.Post("/feedFollows", config.middlewareAuth(config.handlerFollowFeed))
 
 	/* DELETE REQUEST */
+	v1Router.Delete("/feedFollows/{feedFollowsID}", config.middlewareAuth(config.handlerDeleteFeedFollowing))
 	v1Router.Delete("/delete", config.handlerDeleteUser)
 
 	srv := &http.Server{
