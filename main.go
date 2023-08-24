@@ -3,10 +3,11 @@ package main
 import (
 	// standard libraries
 	"database/sql"
-	"fmt"
+	// "fmt"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	_ "github.com/lib/pq"
 
@@ -24,13 +25,13 @@ type apiConfig struct {
 func main() {
 	godotenv.Load()
 
-	feeds, err := getAllFeeds("https://adityadike.hashnode.dev/rss.xml")
+	// feeds, err := getAllFeeds("https://adityadike.hashnode.dev/rss.xml")
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	fmt.Println(feeds)
+	// fmt.Println(feeds)
 
 	portString := os.Getenv("PORT")
 
@@ -49,11 +50,12 @@ func main() {
 	if err != nil {
 		log.Fatal("Unable to connect to the database", err)
 	}
-
+	db := database.New(connection)
 	config := apiConfig{
-		DB: database.New(connection),
+		DB: db,
 	}
 
+	go scraper(db, 10, time.Minute)
 	router := chi.NewRouter()
 
 	// Configuration Cross-Origin Resource Sharing (CORS).
