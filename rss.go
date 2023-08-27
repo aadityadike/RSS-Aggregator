@@ -32,7 +32,6 @@ func getAllFeeds(url string) (RssFeed, error) {
 	}
 
 	res, err := httpClient.Get(url)
-
 	if err != nil {
 		return RssFeed{}, err
 	}
@@ -40,7 +39,6 @@ func getAllFeeds(url string) (RssFeed, error) {
 	defer res.Body.Close()
 
 	data, err := io.ReadAll(res.Body)
-
 	if err != nil {
 		return RssFeed{}, err
 	}
@@ -48,7 +46,6 @@ func getAllFeeds(url string) (RssFeed, error) {
 	storeData := RssFeed{}
 
 	err = xml.Unmarshal(data, &storeData)
-
 	if err != nil {
 		return RssFeed{}, err
 	}

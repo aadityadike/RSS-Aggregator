@@ -20,7 +20,6 @@ func scraper(db *database.Queries, concurrency int, timeBetweenRequest time.Dura
 		feeds, err := db.GetNextFeedsToFetch(
 			context.Background(), int32(concurrency),
 		)
-
 		if err != nil {
 			log.Printf("Error in Fetching Feeds: %s", err)
 			continue
@@ -59,14 +58,15 @@ func scrapeFeed(db *database.Queries, wg *sync.WaitGroup, feed database.Feed) {
 			description.Valid = true
 		}
 
-		pubAt, err := time.Parse(time.RFC1123Z, item.PubDate)
+		pubAt, err := time.Parse(time.RFC1123, item.PubDate)
 
 		if err != nil {
 			if strings.Contains(err.Error(), "duplicate key") {
 				continue
+			} else {
+				log.Println("Error in Parsing Time: ", err)
+				continue
 			}
-			log.Println("Error in Parsing Time: ", err)
-			continue
 		}
 
 		_, err = db.CreatePost(context.Background(), database.CreatePostParams{
