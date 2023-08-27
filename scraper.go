@@ -61,12 +61,7 @@ func scrapeFeed(db *database.Queries, wg *sync.WaitGroup, feed database.Feed) {
 		pubAt, err := time.Parse(time.RFC1123, item.PubDate)
 
 		if err != nil {
-			if strings.Contains(err.Error(), "duplicate key") {
-				continue
-			} else {
-				log.Println("Error in Parsing Time: ", err)
-				continue
-			}
+			log.Println("Error in Parsing Time: ", err)
 		}
 
 		_, err = db.CreatePost(context.Background(), database.CreatePostParams{
@@ -81,6 +76,9 @@ func scrapeFeed(db *database.Queries, wg *sync.WaitGroup, feed database.Feed) {
 		})
 
 		if err != nil {
+			if strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
+				continue
+			}
 			log.Println("Error in Creating Post: ", err)
 		}
 	}
